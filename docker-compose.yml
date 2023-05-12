@@ -1,0 +1,39 @@
+# Use postgres/example user/password credentials
+version: '3.1'
+
+services:
+
+  db:
+    image: postgres
+    restart: always
+    environment:
+      - POSTGRES_DB=blog
+      - POSTGRES_USER=blog
+      - POSTGRES_PASSWORD=blog
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./initdb.sql:/docker-entrypoint-initdb.d/initdb.sql
+    networks:
+      - blog
+
+  
+  blog:
+    image: blog
+    restart: always
+    environment:
+      - POSTGRES_DB=blog
+      - POSTGRES_USER=blog
+      - POSTGRES_PASSWORD=blog
+    ports:
+      - "8081:8081"
+    volumes:
+      - .:/app
+    networks:
+      - blog
+    links:
+      - 'db'
+  
+networks:
+  blog:
+    name: blog

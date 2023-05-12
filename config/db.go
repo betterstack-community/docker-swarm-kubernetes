@@ -3,6 +3,8 @@ package config
 import (
 	"database/sql"
 	"fmt"
+	"os"
+
 	_ "github.com/lib/pq"
 )
 
@@ -10,7 +12,10 @@ var DB *sql.DB
 
 func init() {
 	var err error
-	DB, err = sql.Open("postgres", "postgres://postgres:example@localhost/blog?sslmode=disable")
+	postgresPassword := os.Getenv("POSTGRES_PASSWORD")
+	postgresDB := os.Getenv("POSTGRES_DB")
+	postgresUser := os.Getenv("POSTGRES_USER")
+	DB, err = sql.Open("postgres", "postgres://"+postgresUser+":"+postgresPassword+"@db:5432/"+postgresDB+"?sslmode=disable")
 	if err != nil {
 		panic(err)
 	}
@@ -19,21 +24,4 @@ func init() {
 		panic(err)
 	}
 	fmt.Println("You connected to your database.")
-
-	//signBytes, err := ioutil.ReadFile(PrivKeyPath)
-	//if err != nil {
-	//	panic(err)
-	//}
-	//SignKey, err = jwt.ParseRSAPrivateKeyFromPEM(signBytes)
-	//if err != nil {
-	//	panic(err)
-	//}
-	//verifyBytes, err := ioutil.ReadFile(PubKeyPath)
-	//if err != nil {
-	//	panic(err)
-	//}
-	//VerifyKey, err = jwt.ParseRSAPublicKeyFromPEM(verifyBytes)
-	//if err != nil {
-	//	panic(err)
-	//}
 }
