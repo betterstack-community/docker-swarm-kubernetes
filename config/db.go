@@ -15,7 +15,8 @@ func init() {
 	postgresPassword := os.Getenv("POSTGRES_PASSWORD")
 	postgresDB := os.Getenv("POSTGRES_DB")
 	postgresUser := os.Getenv("POSTGRES_USER")
-	DB, err = sql.Open("postgres", "postgres://"+postgresUser+":"+postgresPassword+"@db:5432/"+postgresDB+"?sslmode=disable")
+	postgresHost := os.Getenv("POSTGRES_HOST")
+	DB, err = sql.Open("postgres", "postgres://"+postgresUser+":"+postgresPassword+"@"+postgresHost+"/"+postgresDB+"?sslmode=disable")
 	if err != nil {
 		panic(err)
 	}

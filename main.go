@@ -12,7 +12,7 @@ import (
 func main() {
 	router := httprouter.New()
 	router.GET("/", handler.AllBlogs)
-	router.POST("/blog", handler.CreateBlog) // Needs Authorization header 'Bearer [token]'
+	router.POST("/blog", handler.CreateBlog)
 	router.GET("/blog/:id", handler.OneBlog)
 	router.PUT("/blog/:id", handler.UpdateBlog)
 	router.DELETE("/blog/:id", handler.DeleteBlog)

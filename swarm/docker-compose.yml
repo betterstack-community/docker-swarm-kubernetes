@@ -1,5 +1,5 @@
 # Use postgres/example user/password credentials
-version: '3.1'
+version: '3.6'
 
 services:
 
@@ -19,12 +19,13 @@ services:
 
   
   blog:
-    image: blog
+    image: cuongld2/blog
     restart: always
     environment:
       - POSTGRES_DB=blog
       - POSTGRES_USER=blog
       - POSTGRES_PASSWORD=blog
+      - POSTGRES_HOST=db:5432
     ports:
       - "8081:8081"
     volumes:
