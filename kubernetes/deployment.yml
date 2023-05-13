@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: application
-          image: cuongld2/blog
+          image: username/blog
           imagePullPolicy: Always
           envFrom:
             - secretRef:

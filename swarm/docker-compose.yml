@@ -5,7 +5,6 @@ services:
 
   db:
     image: postgres
-    restart: always
     environment:
       - POSTGRES_DB=blog
       - POSTGRES_USER=blog
@@ -19,8 +18,7 @@ services:
 
   
   blog:
-    image: cuongld2/blog
-    restart: always
+    image: username/blog
     environment:
       - POSTGRES_DB=blog
       - POSTGRES_USER=blog
@@ -32,8 +30,6 @@ services:
       - .:/app
     networks:
       - blog
-    links:
-      - 'db'
   
 networks:
   blog:

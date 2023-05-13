@@ -11,4 +11,4 @@ spec:
   accessModes:
     - ReadWriteOnce
   hostPath:
-    path: "/home/donald/kubernetes/postgres/docker-pg-vol/data"
+    path: "/home/username/betterstack-swarm-kubernetes/kubernetes/postgres/docker-pg-vol/data"
