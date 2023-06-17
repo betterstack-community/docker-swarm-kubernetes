@@ -5,7 +5,7 @@ metadata:
   name: postgresql-initdb-config
 data:
   init.sql: |
-    CREATE TABLE IF NOT EXISTS blog (
+    CREATE TABLE IF NOT EXISTS posts (
     ID         SERIAL NOT NULL PRIMARY KEY,
     BODY       TEXT   NOT NULL,
     CREATED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

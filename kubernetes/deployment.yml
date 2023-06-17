@@ -15,18 +15,19 @@ spec:
     spec:
       containers:
         - name: application
-          image: username/blog
+          image: <username>/blog
           imagePullPolicy: Always
           envFrom:
             - secretRef:
                 name: dockerhub-secret
+          # Temporarily use raw values for setting database credentials as environment variables, should use Secret management tool like Vault to store these secrets
           env:
             - name: POSTGRES_DB
-              value: blog
+              value: blog_db
             - name: POSTGRES_USER
-              value: blog
+              value: blog_user
             - name: POSTGRES_PASSWORD
-              value: blog
+              value: blog_password
             - name: POSTGRES_HOST
               value: postgresql:5432
           ports:

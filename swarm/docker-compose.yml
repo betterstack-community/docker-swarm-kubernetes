@@ -6,31 +6,31 @@ services:
   db:
     image: postgres
     environment:
-      - POSTGRES_DB=blog
-      - POSTGRES_USER=blog
-      - POSTGRES_PASSWORD=blog
+      - POSTGRES_DB=blog_db
+      - POSTGRES_USER=blog_user
+      - POSTGRES_PASSWORD=blog_password
     ports:
       - "5432:5432"
     volumes:
       - ./initdb.sql:/docker-entrypoint-initdb.d/initdb.sql
     networks:
-      - blog
+      - blog-network
 
   
   blog:
-    image: username/blog
+    image: <username>/blog
     environment:
-      - POSTGRES_DB=blog
-      - POSTGRES_USER=blog
-      - POSTGRES_PASSWORD=blog
+      - POSTGRES_DB=blog_db
+      - POSTGRES_USER=blog_user
+      - POSTGRES_PASSWORD=blog_password
       - POSTGRES_HOST=db:5432
     ports:
       - "8081:8081"
     volumes:
       - .:/app
     networks:
-      - blog
+      - blog-network
   
 networks:
-  blog:
-    name: blog
+  blog-network:
+    name: blog-network

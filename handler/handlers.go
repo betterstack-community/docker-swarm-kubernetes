@@ -12,14 +12,14 @@ import (
 	_ "github.com/lib/pq"
 )
 
-type Blog struct {
+type Posts struct {
 	ID        int       `json:"id"`
 	Body      string    `json:"body"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
-type CreatingBlog struct {
+type CreatingPosts struct {
 	Body string `json:"body"`
 }
 
@@ -31,7 +31,7 @@ func AllBlogs(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	}
 
 	// Get all blogs from DB
-	rows, err := config.DB.Query("SELECT * FROM blog")
+	rows, err := config.DB.Query("SELECT * FROM posts")
 	if err != nil {
 		http.Error(w, http.StatusText(500), 500)
 		return
@@ -40,9 +40,9 @@ func AllBlogs(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	defer rows.Close()
 
 	// Create blog object list
-	blogs := make([]Blog, 0)
+	blogs := make([]Posts, 0)
 	for rows.Next() {
-		blog := Blog{}
+		blog := Posts{}
 		err := rows.Scan(&blog.ID, &blog.Body, &blog.CreatedAt, &blog.UpdatedAt) // order matters
 		if err != nil {
 			http.Error(w, http.StatusText(500), 500)
@@ -65,7 +65,7 @@ func AllBlogs(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 
 func CreateBlog(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 
-	var blog CreatingBlog
+	var blog CreatingPosts
 
 	err := json.NewDecoder(r.Body).Decode(&blog)
 
@@ -75,7 +75,7 @@ func CreateBlog(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 		return
 	}
 
-	_, err = config.DB.Exec("INSERT INTO blog (BODY) VALUES ($1)", blog.Body)
+	_, err = config.DB.Exec("INSERT INTO posts (BODY) VALUES ($1)", blog.Body)
 	if err != nil {
 		http.Error(w, http.StatusText(500), http.StatusInternalServerError)
 		return
@@ -92,10 +92,10 @@ func OneBlog(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	blogID := ps.ByName("id")
 
 	// Get the specific blog from DB
-	row := config.DB.QueryRow("SELECT * FROM blog WHERE id = $1", blogID)
+	row := config.DB.QueryRow("SELECT * FROM posts WHERE id = $1", blogID)
 
 	// Create blog object
-	blog := Blog{}
+	blog := Posts{}
 	err := row.Scan(&blog.ID, &blog.Body, &blog.CreatedAt, &blog.UpdatedAt)
 	switch {
 	case err == sql.ErrNoRows:
@@ -118,9 +118,9 @@ func UpdateBlog(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	// Needs to convert float64 to int for the value from context
 
 	blogID := ps.ByName("id")
-	row := config.DB.QueryRow("SELECT * FROM blog WHERE id = $1", blogID)
+	row := config.DB.QueryRow("SELECT * FROM posts WHERE id = $1", blogID)
 	// Create blog object
-	updatingBlog := Blog{}
+	updatingBlog := Posts{}
 	er := row.Scan(&updatingBlog.ID,
 		&updatingBlog.Body, &updatingBlog.CreatedAt, &updatingBlog.UpdatedAt)
 	switch {
@@ -132,7 +132,7 @@ func UpdateBlog(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		return
 	}
 
-	var blog CreatingBlog
+	var blog CreatingPosts
 
 	err := json.NewDecoder(r.Body).Decode(&blog)
 
@@ -142,7 +142,7 @@ func UpdateBlog(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		return
 	}
 
-	_, err = config.DB.Exec("UPDATE blog SET body = $1 WHERE id = $2", blog.Body, updatingBlog.ID)
+	_, err = config.DB.Exec("UPDATE posts SET body = $1 WHERE id = $2", blog.Body, updatingBlog.ID)
 	if err != nil {
 		http.Error(w, http.StatusText(500), http.StatusInternalServerError)
 		return
@@ -152,9 +152,9 @@ func UpdateBlog(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 func DeleteBlog(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
 	blogID := ps.ByName("id")
-	row := config.DB.QueryRow("SELECT * FROM blog WHERE id = $1", blogID)
+	row := config.DB.QueryRow("SELECT * FROM posts WHERE id = $1", blogID)
 	// Create blog object
-	deletingBlog := Blog{}
+	deletingBlog := Posts{}
 	er := row.Scan(&deletingBlog.ID,
 		&deletingBlog.Body, &deletingBlog.CreatedAt, &deletingBlog.UpdatedAt)
 	switch {
@@ -166,7 +166,7 @@ func DeleteBlog(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		return
 	}
 
-	_, err := config.DB.Exec("DELETE FROM blog WHERE id = $1", deletingBlog.ID)
+	_, err := config.DB.Exec("DELETE FROM posts WHERE id = $1", deletingBlog.ID)
 	if err != nil {
 		http.Error(w, http.StatusText(500), http.StatusInternalServerError)
 		return
